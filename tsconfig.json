@@ -1,0 +1,10 @@
+{
+  "exclude": ["node_modules/**/*", "build"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "build",
+    "sourceRoot": "src",
+    "sourceMap": true,
+    "watch": true
+  }
+}

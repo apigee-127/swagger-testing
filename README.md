@@ -11,6 +11,17 @@ npm install swagger-testing
 
 ### Development
 
+To make a new build
+
+```shell
+npm run build
+```
+
+To run the test
+
+```shell
+npm test
+```
 
 ### License
 
