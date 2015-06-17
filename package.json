@@ -1,0 +1,25 @@
+{
+  "name": "swagger-testing",
+  "version": "0.0.0",
+  "description": "Automated REST API Testing Using SwaggerAPI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo no test yet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apigee-127/swagger-testing.git"
+  },
+  "keywords": [
+    "Swagger",
+    "API",
+    "SwaggerAPI",
+    "Test"
+  ],
+  "author": "Mohsen Azimi <me@azimi.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apigee-127/swagger-testing/issues"
+  },
+  "homepage": "https://github.com/apigee-127/swagger-testing#readme"
+}
