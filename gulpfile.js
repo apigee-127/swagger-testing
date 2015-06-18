@@ -11,9 +11,7 @@ gulp.task('test', ['default'], function() {
 });
 
 gulp.task('default', function() {
-  return gulp.src([
-      'src/**/*.ts'
-    ])
+  return gulp.src(['src/**/*.ts'])
     .pipe(tsc())
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build/'));
 });
