@@ -2,7 +2,7 @@
   "name": "swagger-testing",
   "version": "0.0.0",
   "description": "Automated REST API Testing Using SwaggerAPI",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "prebuild": "npm install",
     "pretest": "npm install",

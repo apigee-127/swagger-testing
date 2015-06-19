@@ -9,6 +9,16 @@
 npm install swagger-testing
 ```
 
+### Usage
+
+```js
+var swaggerTesting = require('swagger-testing');
+var swaggerSpec = require('./swagger.json');
+
+swaggerTesting(swaggerSpec);
+
+```
+
 ### Development
 
 To make a new build
