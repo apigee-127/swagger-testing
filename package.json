@@ -35,7 +35,7 @@
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0",
     "swagger.d.ts": "0.0.2",
-    "typescript": "^1.4.0"
+    "typescript": "1.4.1"
   },
   "dependencies": {
     "swagger-core-api": "apigee-127/swagger-core-api"
