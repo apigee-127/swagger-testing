@@ -1,6 +1,6 @@
 /// <reference path="../typings/node/node.d.ts"/>
 /// <reference path="../typings/request/request.d.ts"/>
-/// <reference path="./typings/mocha/mocha.d.ts"/>
+/// <reference path="../typings/mocha/mocha.d.ts"/>
 
 var rewire = require('rewire');
 var request = require('request');
@@ -13,11 +13,11 @@ var expect = chai.expect;
 
 var swaggerTesting = rewire('../src/index.js');
 
-var getSpy = sinon.spy();
+var requestGetSpy = sinon.spy();
 
 swaggerTesting.__set__({
   request: {
-    get: getSpy
+    get: requestGetSpy
   }
 })
 
@@ -42,7 +42,7 @@ describe('Minimal', function() {
 
   describe('Basic GET calls', function() {
     it('Makes a GET call to "/" path', function() {
-      expect(getSpy).to.have.been.calledWith('http://localhost:3000/');
+      expect(requestGetSpy).to.have.been.calledWith('http://localhost:3000/');
     });
   });
 });
