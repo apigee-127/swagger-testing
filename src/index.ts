@@ -2,6 +2,7 @@
 /// <reference path="../typings/node/node.d.ts"/>
 
 var request = require('request');
+var EventEmitter = require('events').EventEmitter;
 
 interface TestOptions {
   host: string; // to use a different host for testing
