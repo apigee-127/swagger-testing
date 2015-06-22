@@ -1,36 +1,61 @@
 /// <reference path="../node_modules/swagger.d.ts/swagger.d.ts"/>
 /// <reference path="../typings/node/node.d.ts"/>
+/// <reference path="../typings/request/request.d.ts"/>
+/// <reference path="../typings/lodash/lodash.d.ts"/>
 
-var request = require('request');
-var EventEmitter = require('events').EventEmitter;
+import request = require('request');
+import _ = require('lodash');
 
-interface TestOptions {
-  host: string; // to use a different host for testing
+type Callback = (error?: Error)=>void
+
+interface BasicAuthValue {
+  username: string;
+  password: string;
 }
 
-var baseUrl = 'http://localhost:3000'; // FIXME: should be dynamic based on swagger
-
-module.exports = function testSwagger(swagger: Swagger.Spec, options: TestOptions) {
-  Object.keys(swagger.paths).forEach(function(pathName: string) {
-    Object.keys(swagger.paths[pathName]).forEach(function(operationName: string) {
-      if (operationName === 'get') {
-        request.get(baseUrl + pathName, function(error, response) {
-          if (error) return reportError(error);
-
-          reportSuccess('✔️ ' + pathName + ' ' + operationName);
-        });
-      }
-    });
-  });
-};
-
-
-function reportError(error) {
-  console.error('Swagger Testing Failure');
-  console.error('=======================');
-  console.error(error);
+interface SwaggerTestingOptions {
+  auth?: BasicAuthValue; /*| APIKeyAuthValue | OAuthAuthValue */
+  baseUrl?: string; // to use a different host for testing
 }
 
-function reportSuccess(message) {
-  console.log(message);
+interface TestOperationConfig {
+  operationPath: string;
+  operationName: string;
 }
+
+class SwaggerTesting {
+  options: SwaggerTestingOptions;
+  swagger: Swagger.Spec;
+
+  constructor(swagger: Swagger.Spec, options: SwaggerTestingOptions) {
+    this.swagger = swagger;
+    this.options = options;
+  }
+
+  get baseUrl(): string {
+    // TODO: complete me
+    return this.options.baseUrl ||
+      'http://' + (this.swagger.host || 'localhost') + (this.swagger.basePath || '/');
+  }
+
+  /*
+   *
+  */
+  testOperation(config: TestOperationConfig, cb: Callback = noop) {
+    request[config.operationName.toLowerCase()](this.baseUrl, cb);
+  }
+
+  /*
+   *
+  */
+  testAllOperations(operationName: string, cb: Callback = noop) {
+    if (!_.contains(['get', 'head'], operationName.toLowerCase())) {
+      throw new Error('Only non-mutating operations can be used here.');
+    }
+    // find all operations with the same operationName
+  }
+}
+
+function noop(): void {}
+
+module.exports = SwaggerTesting;

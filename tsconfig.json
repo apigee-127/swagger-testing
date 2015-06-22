@@ -5,6 +5,7 @@
     "outDir": "build",
     "sourceRoot": "src",
     "sourceMap": true,
-    "watch": true
+    "watch": true,
+    "target": "es6"
   }
 }

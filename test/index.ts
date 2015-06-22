@@ -11,11 +11,11 @@ var chai = require('chai');
 chai.use(sinonChai);
 var expect = chai.expect;
 
-var swaggerTesting = rewire('../src/index.js');
+var SwaggerTesting = rewire('../src/index.js');
 
 var requestGetSpy = sinon.spy();
 
-swaggerTesting.__set__({
+SwaggerTesting.__set__({
   request: {
     get: requestGetSpy
   }
@@ -26,7 +26,7 @@ type Callback = (err?: Error) => void;
 describe('Minimal', function() {
   var swaggerSpec = require('./swaggers/minimal.json');
 
-  swaggerTesting(swaggerSpec);
+  var swagger = new SwaggerTesting(swaggerSpec, {host: 'http://localhost:3000'});
 
   before(function(done: Callback) {
     sinon
@@ -40,9 +40,12 @@ describe('Minimal', function() {
     done();
   });
 
-  describe('Basic GET calls', function() {
+  describe('#testOperation', function() {
     it('Makes a GET call to "/" path', function() {
-      expect(requestGetSpy).to.have.been.calledWith('http://localhost:3000/');
+      const callbackFn = function callback(){};
+
+      swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
+      expect(requestGetSpy).to.have.been.calledWith('http://localhost/', callbackFn);
     });
   });
 });

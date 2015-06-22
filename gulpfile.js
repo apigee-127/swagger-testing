@@ -4,6 +4,7 @@
 var gulp = require('gulp');
 var tsc = require('gulp-tsc');
 var mocha = require('gulp-mocha');
+var typescriptCompilerOptions = require('./tsconfig.json').compilerOptions;
 
 gulp.task('test', ['default', 'copy'], function() {
   return gulp.src('build/test/index.js', {read: false})
@@ -20,6 +21,6 @@ gulp.task('default', function() {
       'src/**/*.ts',
       'test/**/*.ts'
     ])
-    .pipe(tsc())
+    .pipe(tsc(typescriptCompilerOptions))
     .pipe(gulp.dest('build/'));
 });

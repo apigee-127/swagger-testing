@@ -38,6 +38,7 @@
     "typescript": "1.4.1"
   },
   "dependencies": {
+    "lodash": "^3.9.3",
     "swagger-core-api": "apigee-127/swagger-core-api"
   }
 }
