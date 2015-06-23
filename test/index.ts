@@ -21,39 +21,62 @@ SwaggerTesting.__set__({
 
 type Callback = (err?: Error) => void;
 
-describe('Minimal', function() {
-  var swaggerSpec = require('./swaggers/minimal.json');
+describe('SwaggerTesting constructor', ()=> {
+  it('throws if swagger argument is not provided', ()=> {
+    expect(SwaggerTesting).to.throw(TypeError);
+    expect(SwaggerTesting.bind(null, 42)).to.throw(TypeError);
+  });
 
-  var swagger = new SwaggerTesting(swaggerSpec);
+  xit('TODO: throws if swagger is invalid', ()=> {
+    expect(SwaggerTesting.bind(null, {})).to.throw(TypeError);
+  });
+});
 
-  describe('#testOperation', ()=> {
-    describe('Makes a GET call to "/" path', ()=> {
-      it('works when server reponds with correct response', ()=> {
-        sinon.stub(request, 'get')
-          .yields(null, null, 'Hello, World!');
-        var callbackFn = sinon.spy();
+describe('Specs', ()=> {
+  describe('minimal', function() {
+    var swaggerSpec = require('./swaggers/minimal.json');
 
-        swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
+    var swagger = new SwaggerTesting(swaggerSpec);
 
-        // we only care about the URL in this assertion
-        expect(request.get).to.have.been.calledWithMatch('http://localhost/');
-        expect(callbackFn).to.have.been.calledWith(null);
+    describe('#testOperation', ()=> {
+      describe('Makes a GET call to "/" path', ()=> {
+        it('works when server reponds with correct response', ()=> {
+          sinon.stub(request, 'get')
+            .yields(null, null, 'Hello, World!');
+          var callbackFn = sinon.spy();
 
-        request.get.restore();
+          swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
+
+          // we only care about the URL in this assertion
+          expect(request.get).to.have.been.calledWithMatch('http://localhost/');
+          expect(callbackFn).to.have.been.calledWith(null);
+
+          request.get.restore();
+        });
+
+        it('fails when server responds with incorrect response', ()=> {
+          sinon.stub(request, 'get')
+            .yields(null, null, 42);
+          var callbackFn = sinon.spy();
+
+          swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
+
+          // we only care about the URL in this assertion
+          expect(request.get).to.have.been.calledWithMatch('http://localhost/');
+          expect(callbackFn).to.have.been.calledWithMatch(Error);
+
+          request.get.restore();
+        });
+      });
+    });
+
+    xdescribe('TODO: #testAllOperations', ()=> {
+      it('throws for mutating operations', ()=> {
+
       });
 
-      it('fails when server responds with incorrect response', ()=> {
-        sinon.stub(request, 'get')
-          .yields(null, null, 42);
-        var callbackFn = sinon.spy();
+      it('Makes a GET call to "/" path when testAllOperations("get") is called', ()=> {
 
-        swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
-
-        // we only care about the URL in this assertion
-        expect(request.get).to.have.been.calledWithMatch('http://localhost/');
-        expect(callbackFn).to.have.been.calledWithMatch(Error);
-
-        request.get.restore();
       });
     });
   });

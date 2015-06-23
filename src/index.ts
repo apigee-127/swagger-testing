@@ -27,7 +27,6 @@ module SwaggerTestingModule {
   }
 }
 
-
 module SwaggerTestingModule {
   var request = require('request');
   var _ = require('lodash');
@@ -59,6 +58,9 @@ module SwaggerTestingModule {
     swagger: Swagger.Spec;
 
     constructor(swagger: Swagger.Spec, options: SwaggerTestingOptions = {}) {
+      if (!swagger || !_.isObject(swagger)) {
+        throw new TypeError('swagger must be an object.');
+      }
       this.swagger = swagger;
       this.options = options;
     }
