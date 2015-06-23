@@ -13,6 +13,29 @@ npm install swagger-testing
 
 ### Usage
 
+#### Independent
+
+```js
+var SwaggerTesting = require('swagger-testing');
+var swaggerSpec = require('./swagger.json');
+
+var swagger = new SwaggerTesting(swaggerSpec);
+
+swagger.testOperation({path: '/pet', operation: 'GET'}, function (err) {
+  if (!err) {
+    console.log('Successfully tested GET /pet');
+  }
+});
+
+swagger.testCRUD('/user', '/pet', function (err) {
+  if (!err) {
+    console.log('All CRUD operations for all objects in my API are tested successfully.');
+  }
+});
+```
+
+#### In Mocha/Jasmine tests
+
 Use `SwaggerTesting` in your [Mocha](https://github.com/mochajs/mocha) tests:
 
 ```js
@@ -22,54 +45,69 @@ var swaggerSpec = require('./swagger.json');
 var swagger = new SwaggerTesting(swaggerSpec);
 
 // Automatically test all models
-describe('Test my API', function() {
-  swagger.testCRUD('/user', '/pet');
+describe('My API', function() {
+  it ('tests all objects CRUD operations', function(done){
+    swagger.testCRUD('/user', '/pet', done);
+  });
 });
 
+```
+
+### API
+
+```js
+// Automatically test all models
+swagger.testCRUD('/user', '/pet');
+```
+
+```js
 // Automatically test CRUD resources
-describe('CRUD User (Automated)', function() {
-  swagger.testCRUD('/user');
-});
+swagger.testCRUD('/user');
+```
 
+```js
 // Test all non mutating paths
-describe('GET calls', function() {
-  swagger.testAllOperations('GET');
-});
+swagger.testAllOperations('GET');
+```
 
-// Manually test any operation
+```js
+// Test a specific operation
+swagger.testOperation({
+  path: '/pet',
+  operation: 'PUT',
+  data: pet
+});
+```
+
+### A complex flow  
+
+```js
 describe('CRUD Pet (Manual)', function() {
   var pet = null;
 
-  it('Creates a Pet object', function() {
-    swagger.testOperation({
-      path: '/pet',
-      operation: 'POST',
-      onSuccess: function(result) { pet = result; }
+  it('Creates a Pet object', function(done) {
+    swagger.testOperation({path: '/pet', operation: 'POST'}, function(err, result) {
+      pet = result;
+      done();
     });
   });
 
-  it('Reads the created Pet object', function() {
-    swagger.testOperation({
-      path: '/pet/' + pet.id,
-      operation: 'GET'
-    });
+  it('Reads the created Pet object', function(done) {
+    swagger.testOperation({path: '/pet/' + pet.id, operation: 'GET'}, done);
   });
 
-  it('Updates the created Pet object', function() {
+  it('Updates the created Pet object', function(done) {
     pet.name = Math.random().toString(36);
 
     swagger.testOperation({
       path: '/pet',
       operation: 'PUT',
       data: pet
-    });
+    }, done);
   });
 
-  it('Deletes the created Pet object', function() {
-    swagger.testOperation({
-      path: '/pet/' + pet.id,
-      operation: 'DELETE'
-    });
+  it('Deletes the created Pet object', function(done) {
+    swagger.testOperation({path: '/pet/' + pet.id, operation: 'DELETE'}, done);
   });
 });
 
