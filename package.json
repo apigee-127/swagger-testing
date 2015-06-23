@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "lodash": "^3.9.3",
-    "swagger-core-api": "apigee-127/swagger-core-api"
+    "swagger-core-api": "apigee-127/swagger-core-api",
+    "z-schema": "^3.12.0"
   }
 }

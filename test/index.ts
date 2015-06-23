@@ -13,11 +13,9 @@ var expect = chai.expect;
 
 var SwaggerTesting = rewire('../src/index.js');
 
-var requestGetSpy = sinon.spy();
-
 SwaggerTesting.__set__({
   request: {
-    get: requestGetSpy
+    get: sinon.spy()
   }
 })
 
@@ -26,26 +24,37 @@ type Callback = (err?: Error) => void;
 describe('Minimal', function() {
   var swaggerSpec = require('./swaggers/minimal.json');
 
-  var swagger = new SwaggerTesting(swaggerSpec, {host: 'http://localhost:3000'});
+  var swagger = new SwaggerTesting(swaggerSpec);
 
-  before(function(done: Callback) {
-    sinon
-      .stub(request, 'get')
-      .yields(null, null, 'Hello, World!');
-    done();
-  });
+  describe('#testOperation', ()=> {
+    describe('Makes a GET call to "/" path', ()=> {
+      it('works when server reponds with correct response', ()=> {
+        sinon.stub(request, 'get')
+          .yields(null, null, 'Hello, World!');
+        var callbackFn = sinon.spy();
 
-  after(function(done: Callback) {
-    request.get.restore();
-    done();
-  });
+        swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
 
-  describe('#testOperation', function() {
-    it('Makes a GET call to "/" path', function() {
-      const callbackFn = function callback(){};
+        // we only care about the URL in this assertion
+        expect(request.get).to.have.been.calledWithMatch('http://localhost/');
+        expect(callbackFn).to.have.been.calledWith(null);
 
-      swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
-      expect(requestGetSpy).to.have.been.calledWith('http://localhost/', callbackFn);
+        request.get.restore();
+      });
+
+      it('fails when server responds with incorrect response', ()=> {
+        sinon.stub(request, 'get')
+          .yields(null, null, 42);
+        var callbackFn = sinon.spy();
+
+        swagger.testOperation({operationPath: '/', operationName: 'GET'}, callbackFn);
+
+        // we only care about the URL in this assertion
+        expect(request.get).to.have.been.calledWithMatch('http://localhost/');
+        expect(callbackFn).to.have.been.calledWithMatch(Error);
+
+        request.get.restore();
+      });
     });
   });
 });

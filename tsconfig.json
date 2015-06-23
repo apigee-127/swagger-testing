@@ -2,10 +2,11 @@
   "exclude": ["node_modules/**/*", "build"],
   "compilerOptions": {
     "module": "commonjs",
+    "sourceRoot": "../..",
     "outDir": "build",
     "sourceRoot": "src",
     "sourceMap": true,
     "watch": true,
-    "target": "es6"
+    "target": "es5"
   }
 }
